@@ -111,14 +111,15 @@ class Convolution():
     
 class fft():
 
-    def filter(self, img, type_, radius, channels=None):
+    def filter(self, img, type_, radius):
         '''performs fft on the input image and applies the low/high-pass filter'''
 
-        #converts 
+        #converts to single channel grayscale
         img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
 
         center = (img.shape[0]//2, img.shape[1]//2)
 
+        #initializing x and y axis for grid for filter application
         if img.shape[0] % 2 == 0:
             y = np.arange(-center[0], center[0])
         else:
@@ -129,11 +130,15 @@ class fft():
         else:
             x = np.arange(-center[1], center[1]+1)
 
+        #initializing the grid
         xx, yy = np.meshgrid(x, y)
 
+        #computig fft
         img_fft = np.fft.fft2(img)
+        #shifting the origin at center
         img_fft_shifted = np.fft.fftshift(img_fft)
 
+        #initializing filter and appling it to the shifted fft
         if type_ == 'lowpass':
             lp_filt = np.zeros((img.shape[0], img.shape[1]))
             lp_filt[xx**2 + yy**2 < radius**2] = 1
@@ -145,7 +150,9 @@ class fft():
         else:
             raise ValueError('type_ must be either lowpass or highpass')
 
+        #unshifting/restoring the order back
         out_img = np.fft.ifftshift(out_img) 
+        #computing ifft
         out_img = np.fft.ifft2(out_img)      
 
 
