@@ -2,6 +2,7 @@ import numpy as np
 import cv2 as cv
 import warnings
 
+#initializing the kernels
 kernels = {'gblur5' : 1/233 * np.array([[1,  4,  7,  4, 1],
                                         [4, 16, 26, 16, 4],
                                         [7, 26, 41, 26, 7],
@@ -32,6 +33,10 @@ kernels = {'gblur5' : 1/233 * np.array([[1,  4,  7,  4, 1],
 class Convolution():
         
     def convolute(self, window, window_len, data):
+        '''performs 1D convolution on 1D/time-series signals
+           window : type of window
+           window_len : length of the window
+           data : 1D/time-series signal'''
 
         if window not in ['flat', 'hanning', 'hamming', 'blackman', 'bartlett']:
             raise ValueError ("window must be one of the following: ['flat', 'hanning', 'hamming', 'blackman', 'bartlett']")
@@ -58,6 +63,12 @@ class Convolution():
         return out_signal
 
     def convolute2d(self, img, kernel, pool_type, channels=None):
+        '''performs convolution on images
+           img: input image
+           kernel : type of filter
+           pool_type : one of ['max', 'min', 'average', 'sum']
+                       results may vary depending upon the type of filter used
+           channels : 1 for B/W and 3 for RGB'''
 
         if kernel not in ['gblur3', 'gblur5', 'sharpen', 'edge', 'depth', 'denoise3', 'denoise5']:
             raise ValueError("The kernel must be one of ['gblur3', 'gblur5', 'sharpen', 'edge', 'depth', 'denoise3', 'denoise5']")
@@ -77,6 +88,7 @@ class Convolution():
 
         channels = img.shape[2]
 
+        #padding image according to the kernel size
         kernel_size = kernels[kernel].shape[0]
         if kernel_size  == 3:
             padded_img = np.zeros((img.shape[0]+2, img.shape[1]+2, channels))
@@ -85,8 +97,10 @@ class Convolution():
             padded_img = np.zeros((img.shape[0]+4, img.shape[1]+4, channels))
             padded_img[2:-2, 2:-2, 0:channels] = img
 
+        #initializing output image
         out_img = np.zeros(img.shape)
         
+        #performing covolution
         for k in range(channels):
             for i in range(img.shape[0]):
                 for j in range(img.shape[1]):
@@ -97,32 +111,35 @@ class Convolution():
     
 class fft():
 
-    def filter(self, img, type_, radius):
+    def filter(self, img, type_, radius, channels=None):
+        '''performs fft on the input image and applies the low/high-pass filter'''
 
+        #converts 
         img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+
         center = (img.shape[0]//2, img.shape[1]//2)
 
-        if center[0] % 2 == 0:
-            y = np.arange(-center[0], center[0]+1)
-        else:
+        if img.shape[0] % 2 == 0:
             y = np.arange(-center[0], center[0])
-
-        if center[1] % 2 == 0:
-            x = np.arange(-center[1], center[1]+1)
         else:
+            y = np.arange(-center[0], center[0]+1)
+
+        if img.shape[1] % 2 == 0:
             x = np.arange(-center[1], center[1])
+        else:
+            x = np.arange(-center[1], center[1]+1)
 
         xx, yy = np.meshgrid(x, y)
-        
+
         img_fft = np.fft.fft2(img)
         img_fft_shifted = np.fft.fftshift(img_fft)
 
         if type_ == 'lowpass':
-            lp_filt = np.zeros(img.shape)
+            lp_filt = np.zeros((img.shape[0], img.shape[1]))
             lp_filt[xx**2 + yy**2 < radius**2] = 1
             out_img = img_fft_shifted * lp_filt
         elif type_ == 'highpass':
-            hp_filt = np.ones(img.shape)
+            hp_filt = np.ones((img.shape[0], img.shape[1]))
             hp_filt[xx**2 + yy**2 < radius**2] = 0
             out_img = img_fft_shifted * hp_filt
         else:
@@ -134,7 +151,6 @@ class fft():
 
         return np.real(out_img)
         
-
 
 
 
