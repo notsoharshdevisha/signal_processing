@@ -3,13 +3,13 @@ import cv2 as cv
 import warnings
 
 #initializing the kernels
-kernels = {'gblur5' : 1/233 * np.array([[1,  4,  7,  4, 1],
+kernels = {'gaussianblur5' : 1/256 * np.array([[1,  4,  6,  4, 1],
+                                        [4, 16, 24, 16, 4],
+                                        [6, 24, 36, 24, 6],
                                         [4, 16, 26, 16, 4],
-                                        [7, 26, 41, 26, 7],
-                                        [4, 16, 26, 16, 4],
-                                        [1,  4,  7,  4, 1]]), 
+                                        [1,  4,  6,  4, 1]]), 
 
-           'gblur3' : 1/16 * np.array([[1, 2, 1],
+           'gaussianblur3' : 1/16 * np.array([[1, 2, 1],
                                        [2, 4, 2],
                                        [1, 2, 1]]), 
 
@@ -70,7 +70,7 @@ class Convolution():
                        results may vary depending upon the type of filter used
            channels : 1 for B/W and 3 for RGB'''
 
-        if kernel not in ['gblur3', 'gblur5', 'sharpen', 'edge', 'depth', 'denoise3', 'denoise5']:
+        if kernel not in ['gaussianblur3', 'gaussianblur5', 'sharpen', 'edge', 'depth', 'denoise3', 'denoise5']:
             raise ValueError("The kernel must be one of ['gblur3', 'gblur5', 'sharpen', 'edge', 'depth', 'denoise3', 'denoise5']")
 
         if channels:
