@@ -70,6 +70,7 @@ for img_name in ['fox', 'cat', 'taj']:
         out_img = Convolution().convolute2d(img=img, kernel=k, pool_type='sum')
         cv.imwrite('out_img/out_img_{}_{}.jpeg'.format(img_name, k), out_img)
 
+
 #'''
 #'''
 
@@ -102,4 +103,29 @@ for subname in ['fox', 'cat', 'taj']:
 
 #'''
 
- 
+#''' 
+
+#filtering using fft
+for subname in ['fox', 'cat', 'taj']:
+    img = cv.imread('images/{}.jpeg'.format(subname))
+    fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(20, 15))
+    ax[0].imshow(img[:,:,::-1], cmap='gray')
+    ax[0].set_title('Original Image')
+    ax[0].get_xaxis().set_ticks([])
+    ax[0].get_yaxis().set_ticks([])
+    for i, filt in enumerate(['lowpass', 'highpass']):
+
+        radius = 65 if filt=='lowpass' else 20
+        
+        out_img = fft().filter(img=img, type_=filt, radius=radius)
+        '''
+        #uncomment to save output to out_img
+        cv.imwrite('out_img/out_img_{}_{}.jpeg'.format(subname, filt), out_img)
+        '''
+        ax[i+1].imshow(out_img, cmap='gray')
+        ax[i+1].set_title('{}'.format(filt))
+        ax[i+1].get_xaxis().set_ticks([]) 
+        ax[i+1].get_yaxis().set_ticks([]) 
+    fig.tight_layout()
+    plt.show()
+
