@@ -3,7 +3,7 @@ from Signalprocessing import *
 import cv2 as cv
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import os
+import os                 
 
 try:
     os.mkdir('out_img')
@@ -76,11 +76,11 @@ for img_name in ['fox', 'cat', 'taj']:
 
 for subname in ['fox', 'cat', 'taj']:
 
-    img = cv.imread('images/{}.jpeg'.format(subname))
+    img = mpimg.imread('images/{}.jpeg'.format(subname))
 
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(15, 10))
 
-    ax[0,0].imshow(img[:,:,::-1])
+    ax[0,0].imshow(img)
     ax[0,0].set_title('Original Image')               
     ax[0,0].get_xaxis().set_ticks([])                        
     ax[0,0].get_yaxis().set_ticks([])                        
@@ -93,8 +93,8 @@ for subname in ['fox', 'cat', 'taj']:
     title_list = ['depth', 'sharpen', 'edge']
 
     for title, ((i, j), image) in zip(title_list, zip(indices, image_name_list)):
-        image = cv.imread('out_img/'+image)
-        ax[i, j].imshow(image[:,:,::-1])
+        image = mpimg.imread('out_img/'+image)
+        ax[i, j].imshow(image)
         ax[i, j].set_title('kernel : '+title)
         ax[i, j].get_xaxis().set_ticks([])  
         ax[i, j].get_yaxis().set_ticks([])
