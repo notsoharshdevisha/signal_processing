@@ -31,6 +31,7 @@ ax[0].imshow(img[:,:,::-1])
 ax[0].set_title('Original Image')
 ax[0].get_xaxis().set_ticks([])
 ax[0].get_yaxis().set_ticks([])
+fig.suptitle('Denoising')
 fig.tight_layout()
 plt.show()
 
@@ -126,6 +127,7 @@ for subname in ['fox', 'cat', 'taj']:
         ax[i+1].set_title('{}'.format(filt))
         ax[i+1].get_xaxis().set_ticks([]) 
         ax[i+1].get_yaxis().set_ticks([]) 
+    fig.suptitle('Using FFT')
     fig.tight_layout()
     plt.show()
 
