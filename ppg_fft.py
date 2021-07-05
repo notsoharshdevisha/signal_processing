@@ -6,7 +6,7 @@ import collections
 import warnings
 warnings.filterwarnings('ignore')
 
-data = pd.read_csv('ppg_signal.csv')
+data = pd.read_csv('PPG.csv')
 
 ppg = np.array(data['signal'])
 n = len(ppg)
