@@ -1,4 +1,4 @@
-# signal_processing
+# Signal Processing
 
 * 1D_signalprocessing.py : smoothning or denoising signal using convolution using different window funcions and AI using K Nearest Neighbors algorithm using KNeighbourRegressor.
   * uses earthquake lab sample data from Los Alamos National Laboratory.
